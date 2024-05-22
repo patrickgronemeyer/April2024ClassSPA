@@ -1,7 +1,7 @@
 import html from "html-literal";
 import oops404 from "../../assets/img/oops-404.jpg";
 
-export default () => html`
+export default state => html`
   <div id="oops404">
     <img src="${oops404}" alt="View not found!" />
     <div class="attribution">

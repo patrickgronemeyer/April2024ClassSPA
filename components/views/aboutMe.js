@@ -1,7 +1,7 @@
 import html from "html-literal";
 import dogWithFlower from "../../assets/img/dog-with-flower.jpg";
 
-export default () => html`
+export default state => html`
   ;
   <section id="bio">
     <h2>Vivamus ac justo eu nisi</h2>
