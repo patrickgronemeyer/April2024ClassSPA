@@ -90,11 +90,9 @@ router.hooks({
       case "home":
   axios
     // Get request to retrieve the current weather data using the API key and providing a city name
-    .get(
-      `https://api.openweathermap.org/data/2.5/weather?appid=${process.env.OPEN_WEATHER_MAP_API_KEY}&units=imperial&q=st%20louis`
-    )
+    .get(`${process.env.PIZZA_PLACE_API_URL}/weather/st%20louis`)
     .then(response => {
-      console.log("Weather Data", response.data);
+      console.log("Weather Data:", response.data);
       // Create an object to be stored in the Home state from the response
       store.home.weather = {
         city: response.data.name,
@@ -136,7 +134,7 @@ router.hooks({
             done();
           });
           break;
-      default :
+        default:
         done();
     }
   },
@@ -148,20 +146,19 @@ router.hooks({
 });
 
 router
-.on({
-  "/": () => render(),
-  // Use object destructuring assignment to store the data and (query)params from the Navigo match parameter
-  // (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)
-  // This reduces the number of checks that need to be performed
-  ":view": ({ data, params }) => {
-    // Change the :view data element to camel case and remove any dashes (support for multi-word views)
-    const view = data?.view ? camelCase(data.view) : "home";
-    if (view in store) {        
-      render(store[view]);
-    } else {
-      render(store.viewNotFound);
-      console.log(`View ${view} not defined`);
+  .on({
+    "/": () => render(store.home),
+    ":view": ({ data, params }) => {
+      // data?.view checks if view exists, then ternary runs
+      const view = data?.view ? camelCase(data.view) : "home";
+      if (view in store) {
+        // store[view]
+        render(store[view]);
+      } else {
+        console.log(`View ${view} not defined`);
+        render(store.viewNotFound);
+      }
     }
-  },
-})
-.resolve();
+  })
+  .notFound(() => render(store.viewNotFound))
+  .resolve();
