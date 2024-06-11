@@ -88,7 +88,7 @@ router.hooks({
     switch (view) {
       // Add a case for each view that needs data from an API
       case "home":
-  axios
+        axios
     // Get request to retrieve the current weather data using the API key and providing a city name
     .get(`${process.env.PIZZA_PLACE_API_URL}/weather/st%20louis`)
     .then(response => {
@@ -97,8 +97,8 @@ router.hooks({
       store.home.weather = {
         city: response.data.name,
         temp: response.data.main.temp,
-        feelsLike: response.data.main.feels_like,
-        description: response.data.weather[0].main
+        feelsLike: response.data.main.feelsLike,
+        description: response.data.description
       };
 
       // An alternate method would be to store the values independently
