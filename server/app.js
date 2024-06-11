@@ -4,8 +4,8 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import pizzas from "./routers/pizzas.js" ; 
-import Weather from "./models/Weather.js";
-import axios from "axios";
+import weather from "./routers/weather.js";
+
 
 // Load environment variables from .env file
 dotenv.config();
@@ -17,15 +17,13 @@ const PORT = process.env.PORT || 4040;
 const app = express();
 
 mongoose.connect(
-  process.env.MONGODB,
-  {
+  process.env.MONGODB,{
       // Configuration options to remove deprecation warnings, just include them to remove clutter
       useNewUrlParser: true,
       useUnifiedTopology: true
-  }
-)
+  });
 // making data base in mongoDB using mongoose
-const db = mongoose.connection
+const db = mongoose.connection;
 // connect to mongoDB and error reporting 
 db.on("error", console.error.bind(console, "Connection Error:"));
 db.once(
@@ -72,35 +70,9 @@ app.get("/status", (request, response) => {
   response.send(JSON.stringify({ message: "Service healthy" }));
 });
 
-// Handle the request with HTTP GET method with query parameters and a url parameter
-app.get("/weather/:city", async (request, response) => {
-  const city = request.params.city;
-
-
-  // proxy API setup
-  const weather = await axios
-    // Get request to retrieve the current weather data using the API key and providing a city name
-    .get(
-      `https://api.openweathermap.org/data/2.5/weather?appid=${process.env.OPEN_WEATHER_MAP_API_KEY}&units=imperial&q=${city}`
-    );
-
-  const data = {
-    city: weather.data.name,
-    temp: weather.data.main.temp,
-    feelsLike: weather.data.main.feels_like,
-    description: weather.data.weather[0].main
-  };
-
-  const newWeather = new Weather(data);
-
-  const saveResponse = await newWeather.save();
-
-  response.json(data);
-});
-
-
 
 // tell the Express app to use our new "router" module by adding a app.use statement similar to a middleware app.use except we need to inform the app what route the router file should handle
+app.use("/weather", weather);
 app.use("/pizzas", pizzas);
 
 // Tell the Express app to start listening

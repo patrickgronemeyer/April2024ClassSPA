@@ -37,7 +37,6 @@ function afterRender(state) {
       const toppings = [];
   
       // Iterate over the toppings array
-  
       for (let input of inputList.toppings) {
         // If the value of the checked attribute is true then add the value to the toppings array
         if (input.checked) {
@@ -83,7 +82,9 @@ function afterRender(state) {
 router.hooks({
   before: (done, params) => {
     // We need to know what view we are on to know what data to fetch
-    const view = params && params.data && params.data.view ? camelCase(params.data.view) : "home";
+    const view = params && params.data && params.data.view 
+    ? camelCase(params.data.view) 
+    : "home";
     // Add a switch case statement to handle multiple routes
     switch (view) {
       // Add a case for each view that needs data from an API
@@ -134,17 +135,41 @@ router.hooks({
             done();
           });
           break;
+
+
+      case "weather":
+        // New Axios get request utilizing already made environment variable
+        axios
+          .get(`${process.env.PIZZA_PLACE_API_URL}/weather`)
+          .then(response => {
+            console.log("response", response);
+
+            // We need to store the response to the state, in the next step but in the meantime let's see what it looks like so that we know what to store from the response.
+            store.weather.records = response.data;
+            done();
+          })
+          .catch(error => {
+            console.log("It puked", error);
+            done();
+          });
+        break;
+
+
         default:
-        done();
+          done();
+      }
+    },
+    already: params => {
+      const view =
+        params && params.data && params.data.view
+          ? camelCase(params.data.view)
+          : "home";
+  
+      render(store[view]);
     }
-  },
-  already: (params) => {
-    const view = params && params.data && params.data.view ? camelCase(params.data.view) : "home";
+  });
 
-    render(store[view]);
-  }
-});
-
+  
 router
   .on({
     "/": () => render(store.home),
