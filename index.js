@@ -102,6 +102,7 @@ function afterRender(state) {
       data: {
         datasets: [
           {
+            label: "BTC Price in USDT"
             data
           }
         ]
