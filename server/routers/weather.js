@@ -28,7 +28,6 @@ router.get("/:city", async (request, response) => {
   response.json(data);
 });
 
-
 // All our routes go here
 // Create Weather route
 router.post("/", async (request, response) => {

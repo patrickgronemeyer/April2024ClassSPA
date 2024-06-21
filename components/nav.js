@@ -11,7 +11,9 @@ export default navItems => {
   return html`
     <nav>
       <i class="fas fa-bars"></i>
-      <ul class="">
+      <ul class="hidden--mobile">
+        <!-- state is passed into the module as an argument on line 4 and... -->
+        <!-- navItem is imported as a component on line 2 which output more HTML -->
         ${navItems.map(item => navItem(item)).join("")}
       </ul>
     </nav>

@@ -3,6 +3,7 @@ import Pizza from "../models/Pizza.js";
 
 const router = Router();
 
+// All our routes go here
 // Create pizza route
 router.post("/", async (request, response) => {
   try {
@@ -15,6 +16,7 @@ router.post("/", async (request, response) => {
     // Output error to the console incase it fails to send in response
     console.log(error);
 
+    // if error.name exists and error.name = validation error
     if ("name" in error && error.name === "ValidationError")
       return response.status(400).json(error.errors);
 
@@ -22,7 +24,7 @@ router.post("/", async (request, response) => {
   }
 });
 
-// Get all pizzas route to read from data base
+// Get all pizzas route
 router.get("/", async (request, response) => {
   try {
     // Store the query params into a JavaScript Object
@@ -67,7 +69,7 @@ router.delete("/:id", async (request, response) => {
   }
 });
 
-// Update a single pizza by ID, body stored.
+// Update a single pizza by ID
 router.put("/:id", async (request, response) => {
   try {
     const body = request.body;
